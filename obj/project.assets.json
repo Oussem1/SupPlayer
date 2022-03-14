@@ -12535,23 +12535,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\yahia\\.nuget\\packages\\": {},
+    "C:\\Users\\ousse\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\yahia\\Desktop\\SupPlayer\\SupPlayer\\SupPlayer.csproj",
+      "projectUniqueName": "C:\\Users\\ousse\\source\\repos\\SupPlayer\\SupPlayer.csproj",
       "projectName": "SupPlayer",
-      "projectPath": "C:\\Users\\yahia\\Desktop\\SupPlayer\\SupPlayer\\SupPlayer.csproj",
-      "packagesPath": "C:\\Users\\yahia\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\yahia\\Desktop\\SupPlayer\\SupPlayer\\obj\\",
+      "projectPath": "C:\\Users\\ousse\\source\\repos\\SupPlayer\\SupPlayer.csproj",
+      "packagesPath": "C:\\Users\\ousse\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\ousse\\source\\repos\\SupPlayer\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\yahia\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\ousse\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -12563,6 +12563,7 @@
       },
       "frameworks": {
         "netcoreapp2.1": {
+          "targetAlias": "netcoreapp2.1",
           "projectReferences": {}
         }
       },
@@ -12574,6 +12575,7 @@
     },
     "frameworks": {
       "netcoreapp2.1": {
+        "targetAlias": "netcoreapp2.1",
         "dependencies": {
           "Microsoft.AspNetCore.App": {
             "suppressParent": "All",
@@ -12607,7 +12609,7 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.100\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.404\\RuntimeIdentifierGraph.json"
       }
     }
   }
