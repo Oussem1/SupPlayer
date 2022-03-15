@@ -73,9 +73,9 @@ namespace SupPlayer.Controllers
 
                 //on va recup l'email depuis la base de donnee par rapport a la playlist pour securiser l'ajout du default song
                 var emailVerif = (from Playlists in db.Playlists
-                         where Playlists.PlaylistID == id.GetValueOrDefault()
-                         && Playlists.PlaylistUser == emailUser
-                         select Playlists.PlaylistUser).SingleOrDefault();
+                                  where Playlists.PlaylistID == id.GetValueOrDefault()
+                                  && Playlists.PlaylistUser == emailUser
+                                  select Playlists.PlaylistUser).SingleOrDefault();
 
                 //si il n y a aucuns songs dans la playlist, on va creer un song par defaut sinon la requete marchera pas car aucun song n'a une playlistID
                 bool isEmpty = !data2.Any();
@@ -90,9 +90,10 @@ namespace SupPlayer.Controllers
                         });
                         db.SaveChanges();
                     }
-                }catch(Exception e)
+                }
+                catch (Exception e)
                 {
-                    return RedirectToAction("../Home/Playlist");
+                    return RedirectToAction("Playlist");
                 }
 
                 //on envoi les donnees dans la page Songs
@@ -108,13 +109,13 @@ namespace SupPlayer.Controllers
             if (ModelState.IsValid)
             {
                 //verifie si le formulaire n'est pas envoye vide
-                if (!string.IsNullOrEmpty(playlist.PlaylistName)) 
+                if (!string.IsNullOrEmpty(playlist.PlaylistName))
                 {
                     db.Playlists.Add(playlist);
                     db.SaveChanges();
                 }
 
-                return RedirectToAction("../Home/Playlist");
+                return RedirectToAction("Playlist");
             }
 
             return View();
@@ -128,16 +129,18 @@ namespace SupPlayer.Controllers
             if (ModelState.IsValid)
             {
                 //verifie si le formulaire n'est pas envoye vide
-                if (!string.IsNullOrEmpty(song.SongName)) 
+                if (!string.IsNullOrEmpty(song.SongName))
                 {
                     //regex pour eviter les problemes de nom avec caracteres speciaux
                     Regex regex = new Regex(@"^[A-Za-z0-9-_ ]+$");
                     Match match = regex.Match(song.SongName);
                     if (match.Success)
                     {
-                        try {
+                        try
+                        {
                             //recupere le nom du fichier
-                            var fileName = System.IO.Path.GetFileName(file.FileName);
+                            Console.WriteLine(file.FileName);
+                            var fileName = Path.GetFileName(file.FileName);
                             //si le fichier existe deja on le supprime
                             if (System.IO.File.Exists(fileName))
                             {
@@ -156,11 +159,13 @@ namespace SupPlayer.Controllers
                             //sauvegarde
                             db.Songs.Add(song);
                             db.SaveChanges();
+                            return RedirectToAction("Playlist" + song.PlaylistID);
 
-                            return RedirectToAction("../Home/Playlist/" + song.PlaylistID);
-
-                        }catch(Exception e)
+                        }
+                        catch (Exception e)
                         {
+                            Console.WriteLine(e.StackTrace);
+                            Console.WriteLine(e.Message);
                             ViewData["message"] = "Error...";
                             return View("ErrorSongName");
                         }
@@ -173,7 +178,7 @@ namespace SupPlayer.Controllers
                 }
                 else
                 {
-                    return RedirectToAction("../Home/Playlist/" + song.PlaylistID);
+                    return RedirectToAction("Playlist" + song.PlaylistID);
                 }
             }
 
@@ -187,44 +192,44 @@ namespace SupPlayer.Controllers
             var emailUser = HttpContext.User.Identity.Name;
             List<PlaylistViewModel> data = (from Songs in db.Songs
                                             from Playlists in db.Playlists
-                                                 where Songs.SongId == id.GetValueOrDefault()
-                                                 && Songs.PlaylistID == Playlists.PlaylistID
-                                                 && Playlists.PlaylistUser == emailUser
-                                                 && Songs.SongName != "Default Song"
-                                                 select new PlaylistViewModel
-                                                 {
-                                                     PlaylistID = Playlists.PlaylistID,
-                                                     PlaylistUser = Playlists.PlaylistUser,
-                                                     PlaylistName = Playlists.PlaylistName,
-                                                     SongName = Songs.SongName,
-                                                     SongID = Songs.SongId
+                                            where Songs.SongId == id.GetValueOrDefault()
+                                            && Songs.PlaylistID == Playlists.PlaylistID
+                                            && Playlists.PlaylistUser == emailUser
+                                            && Songs.SongName != "Default Song"
+                                            select new PlaylistViewModel
+                                            {
+                                                PlaylistID = Playlists.PlaylistID,
+                                                PlaylistUser = Playlists.PlaylistUser,
+                                                PlaylistName = Playlists.PlaylistName,
+                                                SongName = Songs.SongName,
+                                                SongID = Songs.SongId
 
-                                                 }).ToList();
+                                            }).ToList();
 
             //recuperatio id du next song
-            var nextSong = (from Songs in db.Songs 
+            var nextSong = (from Songs in db.Songs
                             from Playlists in db.Playlists
-                         where Songs.SongId > id.GetValueOrDefault() 
-                         && Songs.PlaylistID == Playlists.PlaylistID
-                         && Playlists.PlaylistUser == emailUser
-                         && Songs.SongName != "Default Song"
-                         select Songs.SongId).FirstOrDefault();
+                            where Songs.SongId > id.GetValueOrDefault()
+                            && Songs.PlaylistID == Playlists.PlaylistID
+                            && Playlists.PlaylistUser == emailUser
+                            && Songs.SongName != "Default Song"
+                            select Songs.SongId).FirstOrDefault();
 
             //recuperatio id du previous song
             //on rajoute le Max() pour recup le max ID des SongId < id en cours
             //on rajoute le defaultIfEmpty pour avoir une valeur par defaut
-            var prevSong = (from Songs in db.Songs 
+            var prevSong = (from Songs in db.Songs
                             from Playlists in db.Playlists
-                         where Songs.SongId < id.GetValueOrDefault()
-                         && Songs.PlaylistID == Playlists.PlaylistID
-                         && Playlists.PlaylistUser == emailUser
-                         && Songs.SongName != "Default Song"
-                         select Songs.SongId).DefaultIfEmpty(0).Max();
+                            where Songs.SongId < id.GetValueOrDefault()
+                            && Songs.PlaylistID == Playlists.PlaylistID
+                            && Playlists.PlaylistUser == emailUser
+                            && Songs.SongName != "Default Song"
+                            select Songs.SongId).DefaultIfEmpty(0).Max();
 
             //on envoi les donnees a la vue
             ViewData["nextSong"] = nextSong;
             ViewData["prevSong"] = prevSong;
-            
+
             return View(data);
         }
 
@@ -236,29 +241,29 @@ namespace SupPlayer.Controllers
             var emailUser = HttpContext.User.Identity.Name;
             List<PlaylistViewModel> allSongs = (from Songs in db.Songs
                                                 from Playlists in db.Playlists
-                                                 where Playlists.PlaylistID == id.GetValueOrDefault()
-                                                 && Songs.PlaylistID == Playlists.PlaylistID
-                                                 && Playlists.PlaylistUser == emailUser
-                                                 select new PlaylistViewModel
-                                                 {
-                                                     SongName = Songs.SongName,
-                                                     SongID = Songs.SongId
-                                                     
-                                                 }).ToList();
+                                                where Playlists.PlaylistID == id.GetValueOrDefault()
+                                                && Songs.PlaylistID == Playlists.PlaylistID
+                                                && Playlists.PlaylistUser == emailUser
+                                                select new PlaylistViewModel
+                                                {
+                                                    SongName = Songs.SongName,
+                                                    SongID = Songs.SongId
+
+                                                }).ToList();
 
             //securisation par email pour verif si celui qui supprime a le droit ou pas
             var emailVerif = (from Playlists in db.Playlists
-                         where Playlists.PlaylistID == id.GetValueOrDefault()
-                         && Playlists.PlaylistUser == emailUser
-                         select Playlists.PlaylistUser).SingleOrDefault();
+                              where Playlists.PlaylistID == id.GetValueOrDefault()
+                              && Playlists.PlaylistUser == emailUser
+                              select Playlists.PlaylistUser).SingleOrDefault();
 
-            try 
+            try
             {
-                if (emailUser.Equals(emailVerif)) 
+                if (emailUser.Equals(emailVerif))
                 {
                     ViewData["message"] = "The playlist has been correctly deleted";
 
-                    foreach(var song in allSongs)
+                    foreach (var song in allSongs)
                     {
                         //delete fichier mp3
                         var fileName = "wwwroot/music/" + song.SongName + ".mp3";
@@ -285,9 +290,10 @@ namespace SupPlayer.Controllers
                 {
                     ViewData["message"] = "You haven't access to this playlist";
                 }
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
-                return RedirectToAction("../Home/Playlist");
+                return RedirectToAction("Playlist");
             }
 
             return View();
@@ -298,24 +304,24 @@ namespace SupPlayer.Controllers
         {
             //recup nom fichier pour le delete et on rajoute SingleOrDefault pour caster en string
             var emailUser = HttpContext.User.Identity.Name;
-            var songName = (from Songs in db.Songs 
+            var songName = (from Songs in db.Songs
                             from Playlists in db.Playlists
-                         where Songs.SongId == id.GetValueOrDefault()
-                         && Songs.PlaylistID == Playlists.PlaylistID
-                         && Playlists.PlaylistUser == emailUser
-                         select Songs.SongName).SingleOrDefault();
+                            where Songs.SongId == id.GetValueOrDefault()
+                            && Songs.PlaylistID == Playlists.PlaylistID
+                            && Playlists.PlaylistUser == emailUser
+                            select Songs.SongName).SingleOrDefault();
 
             //securisation
             var emailVerif = (from Songs in db.Songs
                               from Playlists in db.Playlists
-                         where Songs.SongId == id.GetValueOrDefault()
-                         && Songs.PlaylistID == Playlists.PlaylistID
-                         && Playlists.PlaylistUser == emailUser
-                         select Playlists.PlaylistUser).SingleOrDefault();
+                              where Songs.SongId == id.GetValueOrDefault()
+                              && Songs.PlaylistID == Playlists.PlaylistID
+                              && Playlists.PlaylistUser == emailUser
+                              select Playlists.PlaylistUser).SingleOrDefault();
 
             try
             {
-                if (emailUser.Equals(emailVerif)) 
+                if (emailUser.Equals(emailVerif))
                 {
                     ViewData["message"] = "The song has been correctly deleted";
 
@@ -336,9 +342,10 @@ namespace SupPlayer.Controllers
                 {
                     ViewData["message"] = "You haven't access to this song";
                 }
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
-                return RedirectToAction("../Home/Playlist");
+                return RedirectToAction("Playlist");
             }
 
             return View();
@@ -378,7 +385,7 @@ namespace SupPlayer.Controllers
 
                 db.SaveChanges();
 
-                return RedirectToAction("../Home/Playlist");
+                return RedirectToAction("Playlist");
             }
 
             return View("Playlist");
