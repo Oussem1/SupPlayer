@@ -77,3 +77,4 @@ C:\Users\ousse\source\repos\SupPlayer\obj\Debug\netcoreapp2.1\SupPlayer.dll
 C:\Users\ousse\source\repos\SupPlayer\obj\Debug\netcoreapp2.1\SupPlayer.pdb
 C:\Users\ousse\source\repos\SupPlayer\obj\Debug\netcoreapp2.1\SupPlayer.genruntimeconfig.cache
 C:\Users\ousse\source\repos\SupPlayer\obj\Debug\netcoreapp2.1\SupPlayer.csproj.CopyComplete
+C:\Users\ousse\source\repos\SupPlayer\obj\Debug\netcoreapp2.1\SupPlayer.csproj.AssemblyReference.cache

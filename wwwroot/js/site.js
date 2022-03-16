@@ -4,16 +4,25 @@
 // Write your JavaScript code.
 
 function changeLight() {
-    var source = document.getElementById("light").src;
-    var splitSource = source.split("/");
-    var lightImg = splitSource[4];
-    if (lightImg == "light.png") {
-        //config pour dark mode
-        document.getElementById("light").src = "/images/dark.png";
-        document.body.classList.toggle("darkLight");
+    var source = document.getElementById("darkToggle");
+    
+    if (document.body.classList.contains("darkLight")) {
+        source.innerHTML = "Light Theme"
     } else {
-        //config pour light mode
-        document.getElementById("light").src = "/images/light.png";
-        document.body.classList.toggle("darkLight");
+        source.innerHTML = "Dark Theme"
     }
+
+    darkMode();
+
+}
+
+function darkMode() {
+    const wasDarkMode = localStorage.getItem('theme') === 'true';
+    localStorage.setItem('theme', !wasDarkMode);
+    const element = document.body
+    element.classList.toggle('darkLight', !wasDarkMode);
+}
+
+function onload() {
+    document.body.classList.toggle('darkLight', localStorage.getItem('theme') === 'true')
 }

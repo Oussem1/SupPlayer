@@ -12,7 +12,7 @@
     {
         SongName = data.SongName;
     }
-    var stringMusic = "/music/" + SongName + ".mp3";
+    var stringMusic = "/music/" + SongName;
 
     //recup id next et previous song
     int nextSong = (int)ViewData["nextSong"];
@@ -26,8 +26,8 @@
     <script>
         var wavesurfer = WaveSurfer.create({
             container: '#waveform',
-            waveColor: 'lightblue',
-            progressColor: 'blue'
+            waveColor: '#FC8900',
+            progressColor: '#317EF8'
         });
 
         function playPause() {
@@ -52,24 +52,24 @@
             foreach (var data in Model)
             {
                 <ul style="list-style:none;">
-                    <li>Playlist : @Html.ActionLink(data.PlaylistName, "Playlist", "Home", new { id = data.PlaylistID })</li>
-                    <li><b>Music : @data.SongName</b></li>
+                    <li style="font-size:2em;">Playlist @Html.ActionLink(data.PlaylistName, "Playlist", "Home", new { id = data.PlaylistID })</li>
+                    <li style="font-size:2em;"><b>Music <span style="color:darkblue;">@data.SongName</span></b></li>
                 </ul>
 
-                <div id="waveform"></div>
+                <div id="waveform" style="margin:20px;"></div>
                 <div class="col text-center">
 
                     @if (prevSong != 0)
                     {
-                        <a href="/Home/PlaySong/@ViewData["prevSong"]" class="btn btn-primary" role="button">Previous</a>
+                    <a href="/Home/PlaySong/@ViewData["prevSong"]" role="button"><button>Previous</button></a>
                     }
 
-                    <button onclick="playPause();" class="btn btn-primary">Play/Pause</button>
-                    <button onclick="muteUnmute();" class="btn btn-primary">Mute/Unmute</button>
+                    <button onclick="playPause();">Play/Pause</button>
+                    <button onclick="muteUnmute();">Mute/Unmute</button>
 
                     @if (nextSong != 0)
                     {
-                        <a href="/Home/PlaySong/@ViewData["nextSong"]" class="btn btn-primary" role="button">Next</a>
+                        <a href="/Home/PlaySong/@ViewData["nextSong"]" role="button"><button>Next</button></a>
                     }
                 </div>
             }

@@ -13,12 +13,12 @@
 
         <p>Use this section to create and manage your playlists</p>
 
-        <form method="post" asp-action="Create_Playlist">
+        <form method="post" asp-action="Create_Playlist" autocomplete="off">
             <input type="hidden" name="PlaylistUser" value="@UserManager.GetUserName(User)" />
             <div class="form-group">
-                <input type="text" class="form-control" name="PlaylistName" placeholder="Enter playlist name" />
+                <input type="text" class="form-control" name="PlaylistName"  id="PlaylistName" placeholder="Enter playlist name"/>
             </div>
-            <button type="submit" class="btn btn-primary">Create the Playlist</button>
+            <button type="submit" id="submitPlaylist" disabled>Create the Playlist</button>
         </form>
 
         <h3>List of playlist</h3>
@@ -33,9 +33,9 @@
                     {
                     <li class="list-group-item">
                         @Html.ActionLink(data.PlaylistName, "Playlist", "Home", new { id = data.PlaylistID })
-                        [@Html.ActionLink("delete", "Delete", "Home", new { id = data.PlaylistID })]
-                        -
-                        [@Html.ActionLink("rename", "Rename", "Home", new { id = data.PlaylistID })]
+                        <i class="pull-right">@Html.ActionLink("delete", "Delete", "Home", new { id = data.PlaylistID })
+                        
+                        @Html.ActionLink("rename", "Rename", "Home", new { id = data.PlaylistID })</i>
                     </li>
                     }
             </ul>
@@ -46,3 +46,18 @@
         <h2> You must be logged in to access this section.</h2>
     }
 </div>
+
+<script>
+    var submitPlaylist = document.getElementById('submitPlaylist')
+    var inputPlaylist = document.getElementById('PlaylistName')
+    console.log(inputPlaylist.value)
+    inputPlaylist.addEventListener('change', function (e) {
+        if (inputPlaylist.value.length === 0) {
+            console.log('vide')
+            submitPlaylist.setAttribute("disabled", "")
+        } else {
+            console.log('pas vide')
+            submitPlaylist.removeAttribute("disabled")
+        }
+    })
+</script>

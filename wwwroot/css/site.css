@@ -10,6 +10,7 @@ body {
 .body-content {
     padding-left: 15px;
     padding-right: 15px;
+    margin-top: 50px;
 }
 
 /* Carousel */
@@ -38,13 +39,121 @@ body {
 
 
 /*config perso pour le site*/
+/*
 .light {
-    height: 30px;
-    margin-top: 10px;
+    height: 20px;
+    margin: 25px;
     cursor: pointer;
 }
-
+*/
+.form-control {
+    border-radius: 20px;
+}
 .darkLight {
-    background-color:black;
-    color:brown;
+    background-color: #181818;
+    color: white;
+}
+
+.darkLight input {
+    background-color: #303030;
+    border: none;
+}
+
+.darkLight li {
+    background-color: #303030;
+}
+
+.navbarClass li {
+    background-color: #222;
+    
+}
+footer {
+    background-color: #222;
+    color: white;
+    padding: 20px;
+}
+
+.logout {
+   padding:25px;
+   border: none;
+   margin:0px;
+}
+
+footer p {
+    margin: 0px;
+}
+
+input {
+    border-radius: 20px;
+    outline: none !important;
+    box-sizing: border-box;
+}
+
+.list-group li{
+    margin: 5px;
+    border-radius: 20px;
+}
+
+.list-group li:first-child {
+    border-radius: 50px;
+}
+
+.list-group li:last-child {
+    border-radius: 50px;
+}
+button {
+    color: white;
+    padding: 9px 25px;
+    background-color: rgba(0, 136, 169, 1);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+}
+button:hover {
+    background-color: rgba(0, 136, 169, 0.8);
+}
+
+.navbar-brand {
+    padding: 25px 15px;
+}
+
+.inputfile {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+.inputfile + label {
+
+    color: white;
+    background-color: rgba(0, 136, 169, 1);
+    display: inline-block;
+    cursor: pointer;
+    padding: 9px 25px;
+    border-radius: 25px;
+}
+
+.inputfile:focus + label,
+.inputfile + label:hover {
+    background-color: rgba(0, 136, 169, 0.8);
+}
+
+.inputfile:focus + label {
+    outline: 1px dotted #000;
+    outline: -webkit-focus-ring-color auto 5px;
+}
+
+svg:not(:root) {
+    overflow: hidden;
+}
+
+svg {
+    fill: currentColor;
+}
+
+#errorMusic {
+    color:red;
 }

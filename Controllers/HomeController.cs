@@ -115,7 +115,7 @@ namespace SupPlayer.Controllers
                     db.SaveChanges();
                 }
 
-                return RedirectToAction("Playlist");
+                return RedirectToAction("Playlist", new { id = playlist.PlaylistID });
             }
 
             return View();
@@ -128,58 +128,61 @@ namespace SupPlayer.Controllers
             //creation du song et upload du song
             if (ModelState.IsValid)
             {
+                //recupere le nom du fichier
+                var fileName = Path.GetFileName(file.FileName);
                 //verifie si le formulaire n'est pas envoye vide
-                if (!string.IsNullOrEmpty(song.SongName))
+                //regex pour eviter les problemes de nom avec caracteres speciaux
+                Regex regex = new Regex(@"^[A-Za-z0-9-_ ]+$");
+                Match match = regex.Match(fileName.Replace(".mp3",""));
+                if (match.Success)
                 {
-                    //regex pour eviter les problemes de nom avec caracteres speciaux
-                    Regex regex = new Regex(@"^[A-Za-z0-9-_ ]+$");
-                    Match match = regex.Match(song.SongName);
-                    if (match.Success)
+                    try
                     {
-                        try
+                        
+                        //si le fichier existe deja on le supprime
+                        if (System.IO.File.Exists(fileName))
                         {
-                            //recupere le nom du fichier
-                            Console.WriteLine(file.FileName);
-                            var fileName = Path.GetFileName(file.FileName);
-                            //si le fichier existe deja on le supprime
-                            if (System.IO.File.Exists(fileName))
-                            {
-                                System.IO.File.Delete(fileName);
-                            }
-                            //on specifie le chemin pour le mettre dans wwwroot/music
-                            //on renome aussi le fichier avec le meme nom que le song et on ajoute mp3 pour quil soit possible a lire
-                            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/music", song.SongName + ".mp3");
-                            //creation dun fichier local et copie de ce fichier 
-                            using (var localFile = System.IO.File.OpenWrite(path))
-                            using (var uploadedFile = file.OpenReadStream())
-                            {
-                                uploadedFile.CopyTo(localFile);
-                            }
-
-                            //sauvegarde
-                            db.Songs.Add(song);
-                            db.SaveChanges();
-                            return RedirectToAction("Playlist" + song.PlaylistID);
-
+                            System.IO.File.Delete(fileName);
                         }
-                        catch (Exception e)
+
+                        //check if wwwroot/music exist
+                        string musicDirectoryPath = "wwwroot/music";
+                        if (!Directory.Exists(musicDirectoryPath))
                         {
-                            Console.WriteLine(e.StackTrace);
-                            Console.WriteLine(e.Message);
-                            ViewData["message"] = "Error...";
-                            return View("ErrorSongName");
+                            DirectoryInfo di = Directory.CreateDirectory(musicDirectoryPath);
                         }
+
+                        //on specifie le chemin pour le mettre dans wwwroot/music
+                        //on renome aussi le fichier avec le meme nom que le song et on ajoute mp3 pour quil soit possible a lire
+                        //var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/music", song.SongName + ".mp3");
+                        var path = Path.Combine(Directory.GetCurrentDirectory(), musicDirectoryPath, fileName);
+                        //creation dun fichier local et copie de ce fichier 
+                        using (var localFile = System.IO.File.OpenWrite(path))
+                        using (var uploadedFile = file.OpenReadStream())
+                        {
+                            uploadedFile.CopyTo(localFile);
+                        }
+                        // initialize SongName = fileName
+                        song.SongName = fileName;
+                        //sauvegarde
+                        db.Songs.Add(song);
+                        db.SaveChanges();
+                        return RedirectToAction("Playlist",new { id = song.PlaylistID });
                     }
-                    else
+                    catch (Exception e)
                     {
-                        ViewData["message"] = "Special characters are not allowed in the song name";
+                        Console.WriteLine(e.StackTrace);
+                        Console.WriteLine(e.Message);
+                        ViewData["message"] = "Error...";
                         return View("ErrorSongName");
                     }
                 }
                 else
                 {
-                    return RedirectToAction("Playlist" + song.PlaylistID);
+                    ViewData["message"] = "Special characters are not allowed in the song name";
+                    return View("ErrorSongName");
                 }
+                
             }
 
             return View("Playlist");
